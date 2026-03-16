@@ -1,5 +1,5 @@
 {
-  "name": "@avinashradha24/verify-js",
+  "name": "@kaavi12/verify-js",
   "version": "1.0.8",
   "description": "Official frontend SDK for Record Verification Platform",
   "main": "dist/index.js",
