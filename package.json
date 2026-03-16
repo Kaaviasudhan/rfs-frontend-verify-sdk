@@ -1,0 +1,17 @@
+{
+  "name": "@avinashradha24/verify-js",
+  "version": "1.0.7",
+  "description": "Official frontend SDK for Record Verification Platform",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

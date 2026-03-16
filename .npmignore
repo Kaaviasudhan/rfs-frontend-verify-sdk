@@ -1,0 +1,35 @@
+# Source files
+src/
+
+# Config files
+tsconfig.json
+tsconfig.build.json
+
+# Development tools
+.vscode/
+.idea/
+
+# Tests
+test/
+tests/
+__tests__/
+
+# Logs
+*.log
+
+# Git
+.git/
+.gitignore
+
+# Environment
+.env
+
+# Documentation drafts
+docs/
+examples/
+
+# Node modules
+node_modules/
+
+# Local configs
+.npmrc
