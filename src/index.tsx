@@ -60,7 +60,7 @@ type PostMessage =
   | { event: 'record:step.change'; step: VerificationStep }
   | { event: 'record:ready' };
 
-const DEFAULT_HOSTED_URL = 'https://record-infra-frontend.vercel.app/step1';
+const DEFAULT_HOSTED_URL = 'https://record-infra-frontend.vercel.app';
 const MODAL_ID = '__record_verify_modal__';
 const KEYFRAMES_ID = '__record_verify_kf__';
 
@@ -228,7 +228,7 @@ export class RecordVerify {
       if (!options.session) throw new Error('[RecordVerify] session is required for verification');
       if (!options.recordVerificationId) throw new Error('[RecordVerify] recordVerificationId is required for verification');
 
-      const url = new URL(this.hostedUrl);
+      const url = new URL(`${this.hostedUrl}/step1`);
       url.searchParams.set('session', options.session);
       url.searchParams.set('recordVerificationId', options.recordVerificationId);
       url.searchParams.set('apiKey', this.apiKey);
