@@ -242,7 +242,7 @@ export class RecordVerify {
       if (!options.skillId) throw new Error('[RecordVerify] skillId is required for skillActivity');
       if (!options.recordUserId) throw new Error('[RecordVerify] recordUserId is required for skillActivity');
 
-      const url = new URL(`${this.hostedUrl}/skill-activity`);
+      const url = new URL(`${this.hostedUrl}/skillactivity`);
       url.searchParams.set('skillId', options.skillId);
       url.searchParams.set('recordUserId', options.recordUserId);
       iframeSrc = url.toString();
