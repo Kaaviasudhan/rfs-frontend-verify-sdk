@@ -277,17 +277,16 @@ export class RecordVerify {
     removeModal();
     injectKeyframes();
 
-    const iframeUrl = new URL(this.hostedUrl);
-    iframeUrl.searchParams.set('session',                options.session);
-    iframeUrl.searchParams.set('recordVerificationId',   options.recordVerificationId);
-    iframeUrl.searchParams.set('apiKey',                 this.apiKey);
-    iframeUrl.searchParams.set('theme',                  options.theme ?? 'light');
-    iframeUrl.searchParams.set('origin',                 window.location.origin);
+    // Always start at /step1 — the entry point for the verification flow
+    const iframeUrl = new URL(`${this.hostedUrl}/step1`);
+    iframeUrl.searchParams.set('session',              options.session);
+    iframeUrl.searchParams.set('recordVerificationId', options.recordVerificationId);
+    iframeUrl.searchParams.set('apiKey',               this.apiKey);
+    iframeUrl.searchParams.set('theme',                options.theme ?? 'light');
+    iframeUrl.searchParams.set('origin',               window.location.origin);
+    iframeUrl.searchParams.set('apiBaseUrl',           this.apiBaseUrl);
     if (options.candidateName)
       iframeUrl.searchParams.set('candidateName', options.candidateName);
-
-    // Pass the apiBaseUrl so the hosted app can reach the signing endpoint
-    iframeUrl.searchParams.set('apiBaseUrl', this.apiBaseUrl);
 
     const { overlay, modal, loader } = buildModalShell();
     const iframe = buildIframe(iframeUrl.toString());
@@ -303,40 +302,10 @@ export class RecordVerify {
     document.body.appendChild(overlay);
     document.body.style.overflow = 'hidden';
 
-    this.msgHandler = (event: MessageEvent) => {
-      if (event.origin !== this.hostedOrigin) return;
-      const msg = event.data as PostMessage;
-      if (!msg?.event) return;
-
-      switch (msg.event) {
-        case 'record:verification.success':
-          this.close();
-          options.onSuccess?.(msg.data);
-          break;
-        case 'record:verification.failed':
-          this.close();
-          options.onFailure?.(msg.error);
-          break;
-        case 'record:verification.close':
-          this.close();
-          options.onClose?.();
-          break;
-        case 'record:step.change':
-          options.onStepChange?.(msg.step);
-          break;
-      }
-    };
-    window.addEventListener('message', this.msgHandler);
-
-    this.keyHandler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        this.close();
-        options.onClose?.();
-      }
-    };
-    window.addEventListener('keydown', this.keyHandler);
+    this._attachListeners(options);
   }
 
+  // ─── openUrl() ────────────────────────────────────────────────────────────
   openUrl(options: RecordVerifyOpenUrlOptions): void {
     removeModal();
     injectKeyframes();
