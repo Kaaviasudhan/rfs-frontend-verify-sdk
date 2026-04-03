@@ -112,11 +112,14 @@ function removeModal(): void {
   if (el) el.remove();
 }
 
+// ─── DOM helpers ──────────────────────────────────
 function buildModalShell(): {
   overlay: HTMLDivElement;
   modal: HTMLDivElement;
   loader: HTMLDivElement;
 } {
+  const isMobile = window.innerWidth < 768;
+
   const overlay = document.createElement('div');
   overlay.id = MODAL_ID;
   overlay.style.cssText = [
@@ -130,19 +133,38 @@ function buildModalShell(): {
   ].join(';');
 
   const modal = document.createElement('div');
-  modal.style.cssText = [
-    'width:1002px',
-    'max-width:95vw',
-    'background:#fff',
-    'border-radius:8px',
-    'overflow:hidden',
-    'box-shadow:0 4px 40px rgba(0,0,0,0.4)',
-    'animation:recordSlideUp 0.3s cubic-bezier(0.34,1.56,0.64,1)',
-  ].join(';');
 
+  if (isMobile) {
+    modal.style.cssText = [
+      'width:100%',
+      'height:100%',
+      'max-width:100vw',
+      'max-height:100vh',
+      'background:#fff',
+      'border-radius:0',
+      'overflow:hidden',
+      'box-shadow:none',
+      'animation:recordSlideUp 0.3s cubic-bezier(0.34,1.56,0.64,1)',
+      'display:flex',
+      'flex-direction:column',
+    ].join(';');
+  } else {
+    // Fixed size on desktop
+    modal.style.cssText = [
+      'width:1002px',
+      'max-width:95vw',
+      'background:#fff',
+      'border-radius:8px',
+      'overflow:hidden',
+      'box-shadow:0 4px 40px rgba(0,0,0,0.4)',
+      'animation:recordSlideUp 0.3s cubic-bezier(0.34,1.56,0.64,1)',
+    ].join(';');
+  }
+
+  const loaderHeight = isMobile ? '100%' : '590px';
   const loader = document.createElement('div');
   loader.style.cssText =
-    'height:590px;display:flex;align-items:center;justify-content:center;background:#fff;';
+    `height:${loaderHeight};display:flex;align-items:center;justify-content:center;background:#fff;flex:1;`;
   loader.innerHTML =
     '<div style="width:32px;height:32px;border:3px solid #e5e7eb;border-top-color:#022c22;border-radius:50%;animation:recordSpin 0.7s linear infinite;"></div>';
 
@@ -150,12 +172,19 @@ function buildModalShell(): {
 }
 
 function buildIframe(src: string): HTMLIFrameElement {
+  const isMobile = window.innerWidth < 768;
   const iframe = document.createElement('iframe');
   iframe.src = src;
-  iframe.width = '100%';
-  iframe.height = '590';
   iframe.allow = 'camera; microphone';
-  iframe.style.cssText = 'border:none;display:none;';
+
+  if (isMobile) {
+    iframe.style.cssText = 'border:none;display:none;width:100%;height:100%;flex:1;';
+  } else {
+    iframe.width = '100%';
+    iframe.height = '590';
+    iframe.style.cssText = 'border:none;display:none;';
+  }
+
   return iframe;
 }
 
